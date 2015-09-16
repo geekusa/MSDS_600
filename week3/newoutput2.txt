@@ -1,0 +1,11 @@
+-5 sentiments  0
+-4 sentiments  0
+-3 sentiments  0
+-2 sentiments  0
+-1 sentiments  0
+ 0 sentiments  0
+ 1 sentiments  0
+ 2 sentiments  2
+ 3 sentiments  0
+ 4 sentiments  0
+ 5 sentiments  0
