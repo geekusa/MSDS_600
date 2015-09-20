@@ -15,6 +15,7 @@ The six data sets given to analyze all have one thing in common: that the Mean a
 \item Standard Deviation to show the spread of the data
 \item Minimum, Maximum, and Range to show the scope
 \item 1st Quartile, 3rd Quartile, and Inner Quartile Range to show the dispersion less affected by outliers (Boslaugh, 2014)
+\item Continuous or Discrete, to characterize the data set as being made up of whole numbers or mimics a continuous set
 \item Number of Values to get an idea of size of the data set
 \item Count of Mild and Extreme Outliers along with counts at both upper and lower ends to show if there are outliers that would skew the central tendency 
 \item Graphical representations\begin{itemize}
@@ -27,7 +28,7 @@ To calculate many of these values I used the built-in functions of R. The except
 > mde <- density(data) #use these two commands to find the most frequent number 
 > mde$x[which(mde$y == max(mde$y))]
 \end{verbatim}
-But I found that formula was not always the best answer, I found a function to calculate the top 10 values, being that the top value would be the mode:
+But I found that formula was not the best answer on discrete data sets. I found a function to calculate the top 10 values, being that the top value would be the mode worked better in these instances:
 \begin{verbatim}
 top10 <- function(x)
 {
@@ -35,7 +36,7 @@ top10 <- function(x)
   head(sort(counts, decreasing = TRUE), 10)
 }
 \end{verbatim}
-The problem here is that on some of the data-sets there was no clear top value so the density option worked better. To calculate range I used \verb|max(x) - min(x)|. According to Boslaugh (2014) "There is no absolute agreement among statisticians about how to define outliers", however there does seem to be some guidelines that are common. One is to find "mild" outliers you multiply 1.5 times the IQR then subtract or add to the outer bounds of the IQR, and then "extreme" would be 3 instead of 1.5 (Boslaugh, 2014). To do this I created a funtion:
+On continuous data sets, the density option worked better because the top values would often be a cluster of values with only a couple of occurrences each. To calculate range I used \verb|max(x) - min(x)|. As for outliers, according to Boslaugh (2014) "There is no absolute agreement among statisticians about how to define outliers", however there does seem to be some guidelines that are common. One is to find "mild" outliers you multiply 1.5 times the IQR then subtract or add to the outer bounds of the IQR, and then "extreme" would be 3 instead of 1.5 (Boslaugh, 2014). To do this I created a funtion:
 \begin{verbatim}
 outliers <- function(x){
   lowerq = quantile(x[,1])[2]
@@ -63,7 +64,7 @@ outliers <- function(x){
   print(paste0("Count of Lower Extreme Outliers: ",extreme.lower.outliers.count))
 }
 \end{verbatim}
-After creating this function I realized that I should have created a function to run against all of the data sets, rather than computing the values one at a time, which is something I will have to do next time as I ran out of time. 
+After creating this function I realized that I should have created a function to run against all of the data sets, rather than computing the values one at a time, which is something I will remember for next time. I also found that on the comparison data sets, showing the histograms and boxplots separately was much less effective then showing them combined.
 \subsection*{Binomial.csv}
 \begin{table}[h!]
   \begin{center}
@@ -82,6 +83,7 @@ After creating this function I realized that I should have created a function to
 	1st Quartile & 67\\
 	3rd Quartile & 73\\
 	IQR & 6\\
+	Continous or Discrete & Discrete\\
 	\# of Values & 1000\\ 
 	\# Count of Mild Outliers & 3\\
 	\# of Upper Mild Outliers & 1\\
@@ -97,7 +99,7 @@ After creating this function I realized that I should have created a function to
 \hfill
 \raisebox{-.5\height}{\includegraphics[width=7cm]{boxplotBN.png}}%
 \par
-Here we see that the Mode is below the Mean and Median, so the data set close to symmetrical. Very little outliers, even "mild" outliers only 0.3\% of total values. \subsection*{ln.csv}
+Here we see that the Mode is below the Mean and Median. The data set close to symmetrical but skewed slightly to the left. Very little outliers, even "mild" outliers only 0.3\% of total values. \subsection*{ln.csv}
 \begin{table}[h!]
   \begin{center}
     \scriptsize
@@ -115,6 +117,7 @@ Here we see that the Mode is below the Mean and Median, so the data set close to
 	1st Quartile & 16\\
 	3rd Quartile & 22\\
 	IQR & 6\\   
+	Continous or Discrete & Discrete\\
 	\# of Values & 1048576\\ 
 	\# of Mild Outliers & 4750\\
 	\# of Upper Mild Outliers & 4222\\
@@ -150,7 +153,8 @@ Again the Mode is below the Median and Mean and it appears there are a lot of up
 	Range & 16.83086 & 8.523442\\
 	1st Quartile & 8.643 & 10.321\\
 	3rd Quartile & 11.343 & 11.667\\
-	IQR & 2.700128 & 1.345798\\   
+	IQR & 2.700128 & 1.345798\\ 
+	Continous or Discrete & Continuous & Continuous\\   
 	\# of Values & 100000 & 100000\\  
 	\# of Mild Outliers & 692 & 741\\
 	\# of Upper Mild Outliers & 357 & 390\\
@@ -166,7 +170,13 @@ Again the Mode is below the Median and Mean and it appears there are a lot of up
 \hfill
 \raisebox{-.5\height}{\includegraphics[width=7cm]{boxplotBN1vBN2.png}}%
 \par
-BN1's range, IQR, and sd are all wider (just about double) than BN2. In both data sets the Mean, Median are basically the exact same number while the Mode is extremely
+While BN1 and BN2 have Mean values that are close, BN1's range, IQR, and Standard Deviation are all wider (just about double) than BN2. BN2 is a much tighter distribution than BN1, this difference is clearly seen in the boxplot figure. In both data sets the Mean, Median are basically the exact same number while the Mode is extremely close. This would indicate very symmetrical distributions, which the histograms show.\\
+\newline
+\newline 
+\newline
+\newline 
+\newline
+\newline  
 \subsection*{N1.csv vs N2.csv}
 
 \begin{table}[h!]
@@ -185,7 +195,8 @@ BN1's range, IQR, and sd are all wider (just about double) than BN2. In both dat
 	Range & 10.7026 & 21.97726\\
 	1st Quartile & 8.774 & 9.0030\\
 	3rd Quartile & 11.458 & 14.1246\\
-	IQR & 2.684247 & 5.121644\\   
+	IQR & 2.684247 & 5.121644\\ 
+	Continous or Discrete & Continuous & Continuous\\  
 	\# of Values & 100 & 100\\
 	\# of Mild Outliers & 1 & 2\\
 	\# of Upper Mild Outliers & 1 & 1\\
@@ -201,7 +212,8 @@ BN1's range, IQR, and sd are all wider (just about double) than BN2. In both dat
 \hfill
 \raisebox{-.5\height}{\includegraphics[width=7cm]{boxplotN1vN2.png}}%
 \par
-
+Similar to how BN1 was larger in many respects to BN2, N2 is larger than N1. It has a much wider range. N2 has several characteristics that are unusual. The Standard Deviation is comparably not that different than the Inner Quartile Range. This indicates that there is a cluster of values in the center of the distribution, but after that the values in the outer quartiles are spread apart further. The boxplot shows this well as it has long whiskers. Other notable differences is that N1's Mean is above the Median, while N2's Mean is below the Median. though the difference is minimal it would indicate the two data sets are skewed in opposite directions. 
+\subsection*{Reference}
 Sarah Boslaugh, 2014. Statistics in a Nutshell, 2nd Edition. Chapter 4. Descriptive Statistics and Graphic Displays.
 
 \end{document}
