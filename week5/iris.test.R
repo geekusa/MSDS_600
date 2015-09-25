@@ -37,3 +37,5 @@ pred <- predict(model, test.iris)
 #check the accuracy of the model using a confusion matrix
 conf.mat <- table("Predictions" = pred, Actual = test.iris.Species)
 conf.mat
+
+(accuracy <- sum(diag(conf.mat)) / length(test.sample.iris) * 100)
